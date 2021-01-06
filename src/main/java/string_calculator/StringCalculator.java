@@ -5,6 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static string_calculator.StringCalculatorUtils.*;
+
 public class StringCalculator {
 
     public Integer add(String input) {
@@ -27,23 +29,23 @@ public class StringCalculator {
     }
 
     private List<String> getDefaultDelimitedNumbers(String input) {
-        return Arrays.asList(input.split(StringCalculatorUtils.DEFAULT_DELIMITED_REGEX));
+        return Arrays.asList(input.split(DEFAULT_DELIMITED_REGEX));
     }
 
     private List<String> getCustomDelimitedNumbers(String input) {
-        String numbers = input.split(StringCalculatorUtils.NEW_LINE)[1];
+        String numbers = input.split(NEW_LINE)[1];
         String customDelimitersRegex = getCustomDelimitersRegex(input);
         return Arrays.asList(numbers.split(customDelimitersRegex));
     }
 
     private boolean hasCustomDelimiters(String input) {
-        return input.startsWith(StringCalculatorUtils.CUSTOM_DELIMITER_PREFIX);
+        return input.startsWith(CUSTOM_DELIMITER_PREFIX);
     }
 
     private Integer getSum(Collection<String> numbers) {
         return numbers.stream()
                 .map(Integer::valueOf)
-                .filter(number -> number <= StringCalculatorUtils.MAXIMUM_NUMBER_SIZE)
+                .filter(number -> number <= MAXIMUM_NUMBER_SIZE)
                 .reduce(0, Integer::sum);
     }
 
@@ -59,13 +61,13 @@ public class StringCalculator {
     }
 
     private String getCustomDelimitersRegex(String input) {
-        String inputDelimiters = input.split(StringCalculatorUtils.NEW_LINE)[0].substring(2);
+        String inputDelimiters = input.split(NEW_LINE)[0].substring(2);
         List<String> extractedDelimiters = new ArrayList<>();
 
         if (inputDelimiters.length() == 1) {
             extractedDelimiters.add(inputDelimiters);
         } else {
-            Matcher matcher = Pattern.compile(StringCalculatorUtils.CUSTOM_DELIMITER_GROUPING_REGEX).matcher(inputDelimiters);
+            Matcher matcher = Pattern.compile(CUSTOM_DELIMITER_GROUPING_REGEX).matcher(inputDelimiters);
             while (matcher.find()) {
                 extractedDelimiters.add(matcher.group(1));
             }
@@ -76,6 +78,6 @@ public class StringCalculator {
     private String getQuotedDelimitersRegex(List<String> delimiters) {
         return delimiters.stream()
                 .map(Pattern::quote)
-                .collect(Collectors.joining(StringCalculatorUtils.PIPE));
+                .collect(Collectors.joining(PIPE));
     }
 }
